@@ -410,6 +410,18 @@
             "default": false
           }
         }
+      },
+      {
+        "title": "Linter Features",
+        "order": 5,
+        "properties": {
+          "terraform.linters.tflint.lintOnSave": {
+            "description": "Enable TFLint linter the currently open file on save",
+            "scope": "window",
+            "type": "boolean",
+            "default": false
+          }
+        }
       }
     ],
     "commands": [
@@ -437,6 +449,10 @@
       {
         "command": "terraform.validate",
         "title": "HashiCorp Terraform: validate"
+      },
+      {
+        "command": "terraform.tflint",
+        "title": "HashiCorp Terraform: tflint"
       },
       {
         "command": "terraform.plan",

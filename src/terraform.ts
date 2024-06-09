@@ -201,6 +201,34 @@ async function terraformCommand(
   return execWorkspaceLSCommand<void>(fullCommand, selectedModule, client, reporter);
 }
 
+export async function tflint(client: LanguageClient, reporter: TelemetryReporter) {
+  try {
+    const textEditor = getActiveTextEditor();
+    if (textEditor === undefined) {
+      vscode.window.showErrorMessage(`Open a Terraform module file and then run tflint again`);
+      return;
+    }
+
+    const moduleUri = Utils.dirname(textEditor.document.uri);
+    const response = await moduleCallers(moduleUri.toString(), client, reporter);
+
+    const selectedModule = await getSelectedModule(moduleUri, response.callers);
+    if (selectedModule === undefined) {
+      return;
+    }
+
+    const fullCommand = `terraform-ls.tflint`;
+
+    return execWorkspaceLSCommand<void>(fullCommand, selectedModule, client, reporter);
+  } catch (error) {
+    if (error instanceof Error) {
+      vscode.window.showErrorMessage(error.message);
+    } else if (typeof error === 'string') {
+      vscode.window.showErrorMessage(error);
+    }
+  }
+}
+
 async function execWorkspaceLSCommand<T>(
   command: string,
   moduleUri: string,

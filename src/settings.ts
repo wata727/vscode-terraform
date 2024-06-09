@@ -11,6 +11,7 @@ export interface InitializationOptions {
   ignoreSingleFileWarning?: boolean;
   terraform?: TerraformOptions;
   validation?: ValidationOptions;
+  linters?: LinterOptions;
 }
 
 export interface TerraformOptions {
@@ -33,6 +34,14 @@ export interface ValidationOptions {
   enableEnhancedValidation: boolean;
 }
 
+export interface LinterOptions {
+  tflint: TFLintOptions;
+}
+
+export interface TFLintOptions {
+  lintOnSave: boolean;
+}
+
 export function getInitializationOptions() {
   /*
     This is basically a set of settings masquerading as a function. The intention
@@ -53,6 +62,7 @@ export function getInitializationOptions() {
   });
   const ignoreSingleFileWarning = config('terraform').get<boolean>('languageServer.ignoreSingleFileWarning', false);
   const experimentalFeatures = config('terraform').get<ExperimentalFeatures>('experimentalFeatures');
+  const linters = config('terraform').get<LinterOptions>('linters');
 
   // deprecated
   const rootModulePaths = config('terraform').get<string[]>('languageServer.rootModules', []);
@@ -65,6 +75,7 @@ export function getInitializationOptions() {
   const initializationOptions: InitializationOptions = {
     validation,
     experimentalFeatures,
+    linters,
     ignoreSingleFileWarning,
     terraform,
     ...(rootModulePaths.length > 0 && { rootModulePaths }),

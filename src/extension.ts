@@ -33,6 +33,7 @@ import { LanguageStatusFeature } from './features/languageStatus';
 import { getInitializationOptions } from './settings';
 import { TerraformLSCommands } from './commands/terraformls';
 import { TerraformCommands } from './commands/terraform';
+import { TFLintCommands } from './commands/tflint';
 import * as lsStatus from './status/language';
 import { TerraformCloudFeature } from './features/terraformCloud';
 
@@ -209,7 +210,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   ]);
 
   // these need the LS to function, so are only registered if enabled
-  context.subscriptions.push(new GenerateBugReportCommand(context), new TerraformCommands(client, reporter));
+  context.subscriptions.push(
+    new GenerateBugReportCommand(context),
+    new TerraformCommands(client, reporter),
+    new TFLintCommands(client, reporter),
+  );
 
   try {
     await client.start();
